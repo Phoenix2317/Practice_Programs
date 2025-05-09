@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
 int province = AskForNumber("How many provinces do you own? ");
 int duchies = AskForNumber("How many duchies do you own? ");
 int estates = AskForNumber("How many estates do you own? ");
