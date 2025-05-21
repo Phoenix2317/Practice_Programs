@@ -25,9 +25,9 @@ internal class Program
             shaft = 60;
         }
 
-        public arrowHead aHead;
-        public fletching tail;
-        public int shaft;
+        private arrowHead aHead;
+        private fletching tail;
+        private int shaft;
 
         public void getCost()
         {
@@ -62,12 +62,12 @@ internal class Program
 
             Console.WriteLine($"Your total for this arrow comes to {cost} gold pieces.");
         }
-        public void Build()
-        {
+        public arrowHead GetArrowHead() { return aHead; }
+        public fletching GetFletching() { return tail; }
+        public int GetShaft() { return shaft; }
 
-            shaft = AskforValue("Length of arrow shaft in Centimeters (between 60 and 100): ", 60, 100);
-
-            int head = headMenu();
+        public void SetArrowHead(int head) 
+        { 
             if (head == 1)
             {
                 aHead = arrowHead.steel;
@@ -78,12 +78,17 @@ internal class Program
                 aHead = arrowHead.wood;
 
             }
-            else
+            else if (head == 3)
             {
                 aHead = arrowHead.obsidian;
             }
-
-            int feather = tailMenu();
+            else
+            {
+                Console.WriteLine("Invalid");
+            }
+        }
+        public void SetFletching(int feather) 
+        { 
             if (feather == 1)
             {
                 tail = fletching.plastic;
@@ -92,14 +97,37 @@ internal class Program
             {
                 tail = fletching.t_feathers;
             }
-            else
+            else if (feather == 3)
             {
                 tail = fletching.g_feathers;
             }
+            else
+            {
+                Console.WriteLine("Invalid");
+            }
 
         }
+        public void SetShaft(int length)
+        {
+            if (length >= 60 && length <= 100)
+            {
+                shaft = length;
+            }
+            else { Console.WriteLine("That is an invalid length and will cause the arrow to misfire.")}
+        }
 
-        public int headMenu()
+        public void Build()
+        {
+
+            SetShaft(AskforValue("Length of arrow shaft in Centimeters (between 60 and 100): ", 60, 100));
+
+            SetArrowHead(headMenu());
+
+            SetFletching(tailMenu());
+            
+
+        }
+        private int headMenu()
         {
             int choice;
             while (true)
@@ -124,8 +152,7 @@ internal class Program
             }
 
         }
-
-        public int tailMenu()
+        private int tailMenu()
         {
             int choice;
 
