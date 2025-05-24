@@ -5,9 +5,9 @@ internal class Program
     private static void Main(string[] args)
     {
 
-        Arrow sell = new Arrow();
-        sell.Build();
-        Console.WriteLine($"Your arrow costs {sell.Cost} gold pieces.");
+        //Arrow sell = new Arrow();
+        float cost = Arrow.SpecialtyArrows();
+        Console.WriteLine($"Your arrow costs {cost} gold pieces.");
 
     }
 
@@ -18,6 +18,7 @@ internal class Program
 
     class Arrow
     {
+
         public Arrow()
         {
             aHead = arrowHead.steel;
@@ -45,6 +46,41 @@ internal class Program
         {
             get => shaft;
             set => shaft = value;
+        }
+
+        public static float SpecialtyArrows()
+        {
+            int choice;
+            float cost = 0;
+            while (true)
+            {
+
+                Console.WriteLine("The specialty arrows are: ");
+                Console.WriteLine("1.   Elite Arrow");
+                Console.WriteLine("2.   Beginner Arrow");
+                Console.WriteLine("3.   Marksman Arrow");
+                Console.Write("Which arrow do you want?: ");
+                 choice = Convert.ToInt32(Console.ReadLine());
+
+                if(choice  >= 1 && choice <= 3)
+                {
+                    break;
+                } else { Console.WriteLine("Sorry, we don't sell that"); }
+
+            }
+
+            switch (choice)
+            {
+                case 1:
+                   return cost = 10 + 10 + (95 * 0.05f);
+                case 2:
+                    return cost = 3 + 3 + (75 * 0.05f);
+                case 3:
+                    return cost = 10 + 3 + (65 * 0.05f);
+                default:
+                    return -1;
+            }
+
         }
 
         public float Cost
