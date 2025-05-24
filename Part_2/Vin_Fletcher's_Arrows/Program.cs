@@ -7,7 +7,7 @@ internal class Program
 
         Arrow sell = new Arrow();
         sell.Build();
-        sell.getCost();
+        Console.WriteLine($"Your arrow costs {sell.Cost} gold pieces.");
 
     }
 
@@ -29,105 +29,80 @@ internal class Program
         private fletching tail;
         private int shaft;
 
-        public void getCost()
+        public arrowHead Tip 
         {
-            float cost = 0;
-            if (aHead == arrowHead.steel)
-            {
-                cost += 10;
-            }
-            else if (aHead == arrowHead.wood)
-            {
-                cost += 3;
-            }
-            else if (aHead == arrowHead.obsidian)
-            {
-                cost += 5;
-            }
-
-            if (tail == fletching.plastic)
-            {
-                cost += 10;
-            }
-            else if (tail == fletching.t_feathers)
-            {
-                cost += 5;
-            }
-            else if (tail == fletching.g_feathers)
-            {
-                cost += 3;
-            }
-
-            cost = cost + shaft * 0.05f;
-
-            Console.WriteLine($"Your total for this arrow comes to {cost} gold pieces.");
+            get => aHead;
+            set => aHead = value;
         }
-        public arrowHead GetArrowHead() { return aHead; }
-        public fletching GetFletching() { return tail; }
-        public int GetShaft() { return shaft; }
 
-        public void SetArrowHead(int head) 
-        { 
-            if (head == 1)
-            {
-                aHead = arrowHead.steel;
-            }
-            else if (head == 2)
-            {
-
-                aHead = arrowHead.wood;
-
-            }
-            else if (head == 3)
-            {
-                aHead = arrowHead.obsidian;
-            }
-            else
-            {
-                Console.WriteLine("Invalid");
-            }
-        }
-        public void SetFletching(int feather) 
-        { 
-            if (feather == 1)
-            {
-                tail = fletching.plastic;
-            }
-            else if (feather == 2)
-            {
-                tail = fletching.t_feathers;
-            }
-            else if (feather == 3)
-            {
-                tail = fletching.g_feathers;
-            }
-            else
-            {
-                Console.WriteLine("Invalid");
-            }
-
-        }
-        public void SetShaft(int length)
+        public fletching Tail
         {
-            if (length >= 60 && length <= 100)
+            get => tail;
+            set => tail = value;
+        }
+
+        public int Shaft
+        {
+            get => shaft;
+            set => shaft = value;
+        }
+
+        public float Cost
+        {
+
+            get
             {
-                shaft = length;
+                float cost = 0;
+                switch (Tip)
+                {
+                    case arrowHead.obsidian:
+                        cost += 5;
+                        break;
+                    case arrowHead.wood:
+                        cost += 3;
+                        break;
+                    case arrowHead.steel:
+                        cost += 10;
+                        break;
+                    default:
+                        break;
+                }
+
+                switch (Tail)
+                {
+                    case fletching.plastic:
+                        cost += 10;
+                        break;
+                    case fletching.t_feathers:
+                        cost += 5;
+                        break;
+                    case fletching.g_feathers:
+                        cost += 3;
+                        break;
+                    default:
+                        break;
+
+                }
+
+                cost += (shaft * 0.05f);
+                return cost;
+
             }
-            else { Console.WriteLine("That is an invalid length and will cause the arrow to misfire.")}
+
         }
 
         public void Build()
         {
 
-            SetShaft(AskforValue("Length of arrow shaft in Centimeters (between 60 and 100): ", 60, 100));
+            Shaft = AskforValue("Length of arrow shaft in Centimeters (between 60 and 100): ", 60, 100);
 
-            SetArrowHead(headMenu());
+            Tip = headMenu();
 
-            SetFletching(tailMenu());
+            Tail = tailMenu();
             
 
         }
-        private int headMenu()
+        private arrowHead headMenu()
         {
             int choice;
             while (true)
@@ -140,19 +115,31 @@ internal class Program
                 Console.Write("Enter the number of what you want: ");
                 choice = Convert.ToInt32(Console.ReadLine());
 
-                if (choice > 0 && choice < 4)
+                switch (choice)
                 {
-                    return choice;
+                    case 1:
+                        return arrowHead.steel;
+                        
+                    case 2:
+                        return arrowHead.wood;
+                       
+                    case 3:
+                        return arrowHead.obsidian;
+                        
+                    default:
+                        Console.WriteLine("Sorry, we don't sell that.");
+                        break;
                 }
-                else
-                {
-                    Console.WriteLine("Sorry, we don't sell that.");
-                }
+                
+                   
+                
 
             }
 
+            
+
         }
-        private int tailMenu()
+        private fletching tailMenu()
         {
             int choice;
 
@@ -165,14 +152,23 @@ internal class Program
                 Console.Write("Enter the number of what you want: ");
                 choice = Convert.ToInt32(Console.ReadLine());
 
-                if (choice > 0 && choice < 4)
-                {
-                    return choice;
-                }
-                else
-                {
-                    Console.WriteLine("Sorry, we don't sell that.");
-                }
+               switch (choice)
+               {
+
+                    case 1:
+                        return fletching.plastic;
+                    case 2:
+                        return fletching.t_feathers;
+                    case 3:
+                        return fletching.g_feathers;
+                    default:
+                        Console.WriteLine("Sorry, we don't sell that.");
+                        break;
+
+               }
+                
+                    
+                
             }
 
 
