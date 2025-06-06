@@ -4,19 +4,57 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        //Testing point class
         Point Position1 = new Point(2, 3);
         Point Position2 = new Point(-4, 0);
         Console.WriteLine($"The first point is located at:  ({Position1.x}, {Position1.y})");
         Console.WriteLine($"The second point is located at: ({Position2.x}, {Position2.y})");
+        Console.Write("\n");
 
+        //testing color class
         Color Pallet = new Color(128, 158, 230);
         Color Basic = Color.Yellow();
 
         Console.WriteLine($"The values for the starting pallet are: (Red: {Pallet.r}, Green: {Pallet.g}, Blue: {Pallet.b}) ");
         Console.WriteLine($"The values for the basic Yellow are:    (Red: {Basic.r}, Green: {Basic.g}, Blue: {Basic.b})");
+        Console.Write("\n");
+
+        //testing Card class
+        Card[] deck = new Card[55];
+
+        int suit = 0;
+        int rank = 0;
+        
+        
+        for( int i = 0; i < deck.Length; i++ ) // Generates a deck of 55 card objects
+        {
+            
+            if ((i + 1) % 14 == 0)
+            {
+                suit++;
+                rank = 0;
+            }
+
+            CardRank currentRank = (CardRank)rank;
+            CardColor currentSuit = (CardColor)suit;
+
+            deck[i] = new Card(currentRank, currentSuit);
+            rank++;
+            
+        }
+
+        Console.WriteLine("The cards in the deck are: ");
+        foreach (Card card in deck) 
+        {
+            Console.WriteLine($"The {card.Suit} {card.Rank}");
+        }
+
     }
 
-    class Point
+    public enum CardColor { red, green, blue, yellow}
+    public enum CardRank { one, two, three, four, five, six, seven, eight, nine, ten, jack, king, queen, joker }
+
+    public class Point
     {
         public int x { get; private set; }
         public int y { get; private set; }
@@ -36,7 +74,7 @@ internal class Program
 
     }
 
-    class Color
+    public class Color
     {
         public int r {  get; private set; }
         public int g { get; private set; }
@@ -117,6 +155,20 @@ internal class Program
             this.r = 0;
             this.g = 0;
             this.b = 0;
+        }
+    }
+
+    public class Card
+    {
+        public CardRank Rank {  get;  private set; } //value on the card
+        public CardColor Suit { get; private set; } //suit of the card
+
+       
+
+        public Card(CardRank rank, CardColor suit) //Generates a card value
+        {
+            this.Rank = rank;
+            this.Suit = suit;
         }
     }
 }
