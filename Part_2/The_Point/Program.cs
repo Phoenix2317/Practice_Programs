@@ -49,10 +49,26 @@ internal class Program
             Console.WriteLine($"The {card.Suit} {card.Rank}");
         }
 
+        Door door = new Door(2317);
+
+        do
+        {
+            door.changeState();
+            Console.WriteLine($"The new state is: {door.state}");
+        } while (door.state != State.open);
+
+        Console.Write("Attempting to change passcode, enter the current pass code: ");
+        int code = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Attempting to change passcode, enter the new code: ");
+        int newCode = Convert.ToInt32(Console.ReadLine());
+        door.changePasscode(code, newCode);
+
     }
 
-    public enum CardColor { red, green, blue, yellow}
+    public enum CardColor { red, green, blue, yellow }
     public enum CardRank { one, two, three, four, five, six, seven, eight, nine, ten, jack, king, queen, joker }
+
+    public enum State { locked, unlocked, open, closed }
 
     public class Point
     {
@@ -169,6 +185,67 @@ internal class Program
         {
             this.Rank = rank;
             this.Suit = suit;
+        }
+    }
+
+    public class Door
+    {
+
+        public int passcode { get; private set; } = 0;
+
+        public State state { get; private set; }
+
+        public Door(int intial)
+        {
+            passcode = intial;
+            state = State.locked;
+        }
+
+        public void changeState()
+        {
+
+            if (state == State.locked)
+            {
+                Console.Write("Please Enter the Passcode: ");
+                int guess = Convert.ToInt32(Console.ReadLine() ?? "-1");
+                if (guess == passcode)
+                {
+                    state = State.unlocked;
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect passcode. The door remains locked.");
+                }
+            }
+            else if (state == State.unlocked || state == State.closed)
+            {
+                int choice;
+                Console.Write("Open (1) or Lock (2)?: ");
+                choice = Convert.ToInt32(Console.ReadLine());
+                if (choice == 1)
+                {
+                    state = State.open;
+                }
+                else if (choice == 2) { state = State.locked; }
+                else { Console.WriteLine("Unable to reach that state"); }
+                
+            }
+            else if (state == State.open) 
+            {
+                state = State.closed;
+            }
+            
+
+        }
+
+        public void changePasscode(int currentCode, int newCode)
+        {
+
+            if(passcode == currentCode)
+            {
+                passcode = newCode;
+            }
+
         }
     }
 }
