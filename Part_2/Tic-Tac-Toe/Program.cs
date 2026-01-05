@@ -1,36 +1,88 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+
+
+
+double loc;
+
+Console.WriteLine("Making Tic-Tac-Toe board...");
+
+
+Board Tic = new Board();
+
+while (!Tic.IsOver())
+{
+    Tic.Turn();
+
+    
+    
+    Console.WriteLine("Turn: " + Tic.TurnCount);
+    Console.WriteLine("Player: " + Tic.Player);
+
+    Tic.PrintBoard();
+    Console.Write("Enter your Placement with numpad: ");
+    string? input = Console.ReadLine();
+    while (input == null || !char.IsDigit(input, 0))
+    {
+        Console.WriteLine("Needs to be a number between 1-9, try again");
+        Console.Write("Enter your Placement with numpad: ");
+        input = Console.ReadLine();
+    }
+   
+
+    loc = Convert.ToDouble(input);
+    while (!Tic.Place(loc))
+    {
+        Console.WriteLine("Invalid input, try again.");
+
+        Console.Write("Enter your Placement with numpad: ");
+        loc = Convert.ToDouble(Console.ReadLine());
+    }
+
+
+}
+
+Tic.PrintBoard();
+Console.WriteLine("Player " + Tic.Player + " wins!");
+
 
 public class Game
 {
     //Number of players for the game
     public int NumPlayers { get; private set; }
-    public bool isEnd { get; private set; }
+
 
     //Number of players for the game
     public Game(int Players)
     {
         NumPlayers = Players;
-        isEnd = false;
+        
     }
 
+   
 }
 
 public class Board
 {
-
-    private Game TicTacToe = new Game(2);
+    private bool debug = false;
     
+    private Game TicTacToe = new Game(2);
+
+    private int count = 0;
 
     private char[,] _table;
     public int Player {  get; private set; }
     public int TurnCount { get; private set; }
+    public bool Draw { get; private set; }
 
     public Board()
     {
         _table = new char[3,3];
-
+        Player = 0;
+        TurnCount = 0;
+        Draw = false;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -42,7 +94,7 @@ public class Board
     }
 
     //Sets the current turn order
-    public void turn()
+    public void Turn()
     {
         if (TicTacToe.NumPlayers == 2)
         {
@@ -54,13 +106,18 @@ public class Board
     }
 
     //Places the players marker on the board based on how a numpad is set up, 7 being top left and 3 being bottom right
-    public void Place(double loc)
+    public bool Place(double loc)
     {
-        if(Math.Ceiling(loc/3) == 1)
+        if (debug)
         {
-            for (int i = 0;i < 3; i++)
+            Console.WriteLine("Loc divided by 3 ceiling is: " + Math.Ceiling((loc / 3)));
+        }
+
+        if(Math.Ceiling(loc/3) == 3)
+        {
+            for (int i = 0; i < 3; i++)
             {
-                if(i + 1 == loc)
+                if(i + 7 == loc)
                 {
                     if (_table[0, i] == ' ')
                     {
@@ -71,6 +128,9 @@ public class Board
                         {
                             _table[0, i] = 'O';
                         }
+                    } else
+                    {
+                        return false;
                     }
                 }
                 
@@ -80,7 +140,7 @@ public class Board
         {
             for (int i = 0; i < 3; i++)
             {
-                if (i + 1 == loc)
+                if (i + 4 == loc)
                 {
                     if (_table[1, i] == ' ')
                     {
@@ -92,12 +152,16 @@ public class Board
                         {
                             _table[1, i] = 'O';
                         }
+                    } 
+                    else
+                    {
+                        return false;
                     }
                 }
 
             }
         }
-        else if (Math.Ceiling(loc / 3) == 3)
+        else if (Math.Ceiling(loc / 3) == 1)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -113,62 +177,111 @@ public class Board
                         {
                             _table[2, i] = 'O';
                         }
+                    } 
+                    else
+                    {
+                        return false;
                     }
                 }
 
             }
         }
+        else
+        {
+            
+            return false;
+        }
+
+        return true;
     }
 
-    private bool IsOver()
+    public void PrintBoard()
+    {
+
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+
+                Console.Write(_table[i, j]);
+                
+                if(j != 2)
+                {
+                    Console.Write(" | ");
+                }
+                
+
+            }
+            Console.WriteLine();
+            if(i != 2)
+            {
+                Console.WriteLine("----------");
+            }
+           
+        }
+    }
+
+    public bool IsOver()
     {
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                if (_table[i,j] != ' ')
+                if (_table[i, j] != ' ')
                 {
-                    
+
+                    count++;
+
                     //checks for 3 in a row going right
-                    if(j + 1 < 3 && j + 2 < 3)
+                    if (j + 1 < 3 && j + 2 < 3)
                     {
-                        if (_table[i,j + 1] == _table[i,j] && _table[i,j + 2] == _table[i, j])
+                        if (_table[i, j + 1] == _table[i, j] && _table[i, j + 2] == _table[i, j])
                         {
                             return true;
                         }
                     }
 
                     //checks for 3 in a row going down
-                    if(i -1 > -1 && i - 2 > -1)
+                    if (i - 1 > -1 && i - 2 > -1)
                     {
-                        if (_table[i - 1, j] == _table[i,j] && _table[i-2, j] == _table[i, j])
+                        if (_table[i - 1, j] == _table[i, j] && _table[i - 2, j] == _table[i, j])
                         {
                             return true;
                         }
                     }
-                    
+
                     //checks for three in a row in a diangle going from top right to bottom left
                     if ((i - 1 > -1 && j - 1 > -1) && (i - 2 > -1 && j - 2 > -1))
                     {
-                        if ((_table[i-1,j-1] == _table[i,j]) && (_table[i - 2, j- 2] == _table[i,j]))
+                        if ((_table[i - 1, j - 1] == _table[i, j]) && (_table[i - 2, j - 2] == _table[i, j]))
                         {
                             return true;
                         }
                     }
-                    
+
                     //checks for 3 in a row in a diangle going from top left to bottom right
-                    if ( (i - 1 > -1 && j + 1 < 3) && (i - 2 > -1 && j + 2 < 3))
+                    if ((i - 1 > -1 && j + 1 < 3) && (i - 2 > -1 && j + 2 < 3))
                     {
-                        if (_table[i-1, j+1] == _table[i,j] && _table[i-2, j+2] == _table[i, j])
+                        if (_table[i - 1, j + 1] == _table[i, j] && _table[i - 2, j + 2] == _table[i, j])
                         {
                             return true;
                         }
                     }
-                    
+
+                    if(count == 9)
+                    {
+                        Draw = true;
+                        return true;
+                    }
+
                 }
             }
         }
 
+        count = 0;
+
         return false;
     }
+
+
 }
