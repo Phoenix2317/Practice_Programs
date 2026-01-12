@@ -1,5 +1,41 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+Pack storage = new Pack(50f, 20f, 10);
+
+Console.WriteLine($"A pack has been created with  a weight limit of {storage.maxWeight} a volume limit of {storage.maxVolume} and a item limit of {storage.InvSize}");
+
+while (true)
+{
+    Console.WriteLine("What do you want to add?");
+    Console.WriteLine("1 - Arrow ");
+    Console.WriteLine("2 - Bow ");
+    Console.WriteLine("3 - Rope ");
+    Console.WriteLine("4 - Water ");
+    Console.WriteLine("5 - Food Rations");
+    Console.WriteLine("6 - Sword ");
+    
+
+    int choice = Convert.ToInt32(Console.ReadLine());
+
+    InventoryItem newItem = choice switch
+    {
+        1 => new Arrow(),
+        2 => new Bow(),
+        3 => new Rope(),
+        4 => new Water(),
+        5 => new FoodRations(),
+        6 => new Sword()
+    };
+
+    if (!storage.Add(newItem))
+    {
+        Console.WriteLine("Unable to put item in inventory");
+    }
+
+    Console.WriteLine();
+    Console.WriteLine($"Volume: {storage.CurrVolume}\n Weight: {storage.CurrWeight}\n Items: {storage.Count}\n");
+    
+}
 
 public class InventoryItem
 {
@@ -55,54 +91,38 @@ public class Pack
     public float maxWeight { get; private set; }
     public float maxVolume { get; private set; }
 
+    public int InvSize { get; private set; }
     private InventoryItem[] Inventory;
     public int Count { get; private set; }
     public float CurrWeight { get; private set; }
     public float CurrVolume { get; private set; }
 
-    public Pack()
+    public Pack(float maxweight, float maxvolume, int invsize)
     {
-        maxWeight = 20f;
-        maxVolume = 10f;
+        maxWeight = maxweight;
+        maxVolume = maxvolume;
         Count = 0;
         CurrWeight = 0f;
         CurrVolume = 0f;
-        Inventory = new InventoryItem[50];
+        Inventory = new InventoryItem[invsize];
+        InvSize = invsize;
+
     }
 
     public bool Add(InventoryItem item)
     {
-        if (Count == 50) return false;
-        else if (!Check(item)) return false;
+        if (Count >= InvSize) return false;
+        else if (CurrVolume + item.Volume > maxVolume) return false;
+        else if (CurrWeight + item.Weight  > maxWeight) return false;
         else
         {
             Inventory[Count] = item;
             Count++;
-            return true;
-        }
-    }
-
-    private bool Check(InventoryItem newItem)
-    {
-        foreach (InventoryItem item in Inventory)
-        {
-            CurrWeight += item.Weight;
             CurrVolume += item.Volume;
-        }
-
-        CurrWeight += newItem.Weight;
-        CurrVolume += newItem.Volume;
-
-        if (CurrVolume > maxVolume || CurrWeight > maxWeight)
-        {
-            CurrWeight -= newItem.Weight;
-            CurrVolume -= newItem.Volume;
-            return false;
-            
-        } else
-        {
-           
+            CurrWeight += item.Weight;
             return true;
         }
     }
+
+    
 }
