@@ -6,6 +6,9 @@ Console.WriteLine($"A pack has been created with  a weight limit of {storage.max
 
 while (true)
 {
+
+    Console.WriteLine(storage.ToString());
+
     Console.WriteLine("What do you want to add?");
     Console.WriteLine("1 - Arrow ");
     Console.WriteLine("2 - Bow ");
@@ -58,32 +61,56 @@ public class InventoryItem
 public class Arrow : InventoryItem
 {
     public Arrow() : base(0.1f, 0.05f) { }
-    
+    public override string ToString()
+    {
+        return "Arrow";
+    }
+
 }
 
 public class Bow : InventoryItem
 {
     public Bow() : base(1f, 4f) { }
+    public override string ToString()
+    {
+        return "Bow";
+    }
 }
 
 public class Rope : InventoryItem
 {
     public Rope() : base(1f, 1.5f) { }
+        public override string ToString()
+        {
+            return "Rope";
+    }
 }
 
 public class Water : InventoryItem
 {
     public Water() : base(2f, 3f) { }
+        public override string ToString()
+        {
+            return "Water";
+    }
 }
 
 public class FoodRations : InventoryItem
 {
     public FoodRations() : base(1f, 0.5f) { }
+        public override string ToString()
+        {
+            return "Food Rations";
+    }
 }
 
 public class Sword : InventoryItem
 {
     public Sword() : base(5f, 3f) { }
+        public override string ToString()
+        {
+            return "Sword";
+    }
 }
 
 public class Pack
@@ -124,5 +151,18 @@ public class Pack
         }
     }
 
-    
+    public override string ToString()
+    {
+        string output = $"Pack with {Count} items, {CurrWeight} weight and {CurrVolume} space\n";
+        for (int i = 0; i < Count; i++)
+        {
+            
+            output += Inventory[i].ToString();
+            if (i < Count - 1)
+            {
+                output += ", ";
+            }
+        }
+        return output;
+    }
 }
