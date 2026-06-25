@@ -1,11 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
 
 
+// Create a new map with dimensions 4x4 and initialize the player's starting coordinate at (0, 0)
 Map mapF = new Map(4, 4);
 Coordinate playerCoordinate = new Coordinate(0, 0);
 
-
+// Start the main game loop
 while (true)
 {
 

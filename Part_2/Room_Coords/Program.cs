@@ -9,17 +9,28 @@ Console.WriteLine($"Are a and b adjacent? {Coordinate.AreAdjacent(a, b)}");
 Console.WriteLine($"Are a and c adjacent? {Coordinate.AreAdjacent(a, c)}");
 Console.WriteLine($"Are b and c adjacent? {Coordinate.AreAdjacent(b, c)}");
 
+// Define a struct to represent a coordinate in a 2D space
 public struct Coordinate
 {
+    //  properties for the X and Y axes
     public int X { get; }
     public int Y { get; }
 
+    /** Initializes a new instance of the Coordinate struct with the specified X and Y values.
+     * @param x The X coordinate.
+     * @param y The Y coordinate.
+     */
     public Coordinate(int x, int y)
     {
         X = x;
         Y = y;
     }
 
+    /** Determines if two coordinates are adjacent to each other.
+     * @param a The first coordinate.
+     * @param b The second coordinate.
+     * @returns True if the coordinates are adjacent; otherwise, false.
+     */
     public static bool AreAdjacent(Coordinate a, Coordinate b)
     {
         int rowChange = Math.Abs(a.X - b.X);

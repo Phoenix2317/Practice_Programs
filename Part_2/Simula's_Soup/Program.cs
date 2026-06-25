@@ -5,6 +5,7 @@ bool correct = false;
 
 Console.WriteLine("Welcome to Simula's Restraunt!");
 
+// Loop until the user provides a valid dish type
 while (!correct)
 {
 
@@ -12,6 +13,7 @@ while (!correct)
 
     string dish = Console.ReadLine()!;
 
+    // Use a switch statement to determine the dish type and set the corresponding enum value
     switch (dish)
     {
 
@@ -37,11 +39,13 @@ while (!correct)
 
 correct = false;
 
+// Loop until the user provides a valid main ingredient
 while (!correct)
 {
     Console.Write("And what do you want the main ingredient to be? ");
 
     string ingredient = Console.ReadLine()!;
+    // Use a switch statement to determine the main ingredient and set the corresponding enum value
     switch (ingredient)
     {
 
@@ -70,12 +74,14 @@ while (!correct)
 
 correct = false;
 
+// Loop until the user provides a valid seasoning flavor
 while (!correct)
 {
 
     Console.Write("What flavor do you want added? ");
 
     string flavor = Console.ReadLine()!;
+    // Use a switch statement to determine the seasoning flavor and set the corresponding enum value
     switch (flavor)
     {
         case "spicy":
@@ -100,7 +106,7 @@ while (!correct)
 
 Console.WriteLine($"Alright, I will have your {Food.taste} {Food.Main} {Food.Style} in a few minuets.");
 
-
+// Define enums for recipe types, ingredients, and seasonings
 enum Reciepie { Soup, Stew, Gumbo }
 enum Ingredient { Mushrooms, Chicken, Carrots, Potatoes}
 enum Seasoning { Spicy, Salty, Sweet}
