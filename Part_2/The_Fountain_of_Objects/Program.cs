@@ -6,6 +6,11 @@ Map mapF = new Map(4, 4);
 Coordinate playerCoordinate = new Coordinate(0, 0);
 
 // Start the main game loop
+
+IActionCommand start = new HelpCommand(); // Create a new instance of the HelpCommand to display the game instructions
+
+start.Run(ref playerCoordinate);
+
 while (true)
 {
 
@@ -37,9 +42,22 @@ while (true)
         {
             Console.WriteLine("You hear water dripping in the room. The fountain of Objects is here!");
         }
+    } 
+    else if (mapF.isPitNearby(playerCoordinate)) // Check if the player is near the pit's location
+    {
+        Console.WriteLine("You feel a draft. There is a pit in a nearby room.");
     }
-    
-   
+    else if (mapF.IsPitCoordinate(playerCoordinate)) // Check if the player is at the pit's location
+    {
+        Console.WriteLine("You fell into a pit and died! Game over.");
+        break; // Exit the loop and end the game
+    }
+    else // If the player is in any other room
+    {
+        Console.WriteLine("You are in a dark room. You can hear water dripping.");
+    }
+
+
 
     Console.WriteLine("Enter your action (N, S, E, W, ENABLE): ");
 
@@ -52,6 +70,7 @@ while (true)
         "E" => new EastCommand(),
         "W" => new WestCommand(),
         "ENABLE" => new EnableCommand(),
+        "HELP" => new HelpCommand(),
         _ => new InvalidCommand() // Handle invalid commands
     };
 
@@ -70,8 +89,10 @@ public class Map
     public int MaxHeight { get; }
 
     // Property for the fountain's location on the map
-    public Coordinate fountainLocation { get; } = new Coordinate(0, 2);
+    public Coordinate fountainLocation { get; } = new Coordinate(3, 2);
     public bool FountainEnabled { get; set; } = false;
+
+    public Coordinate pitLocation { get; } = new Coordinate(2,3);
 
     // Constructor to initialize the map with specified width and height
     public Map(int width, int height)
@@ -107,6 +128,28 @@ public class Map
         {
             return false;
         }
+    }
+
+    public bool IsPitCoordinate(Coordinate coordinate)
+    {
+        if (coordinate.X == pitLocation.X && coordinate.Y == pitLocation.Y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool isPitNearby(Coordinate coordinate)
+    {
+        // Check the four adjacent coordinates (north, south, east, west) for the pit's location
+        Coordinate north = new Coordinate(coordinate.X - 1, coordinate.Y);
+        Coordinate south = new Coordinate(coordinate.X + 1, coordinate.Y);
+        Coordinate east = new Coordinate(coordinate.X, coordinate.Y + 1);
+        Coordinate west = new Coordinate(coordinate.X, coordinate.Y - 1);
+        return IsPitCoordinate(north) || IsPitCoordinate(south) || IsPitCoordinate(east) || IsPitCoordinate(west);
     }
 }
 
@@ -169,7 +212,7 @@ public class WestCommand : IActionCommand
 
 
 // Class representing the command to enable or disable the fountain
-public class  EnableCommand : IActionCommand
+public class EnableCommand : IActionCommand
 {
    public void Run(ref Coordinate cord, Map? map = null)
     {
@@ -202,4 +245,29 @@ public class InvalidCommand : IActionCommand
     }
 }
 
+public class HelpCommand : IActionCommand
+{
+    public void Run(ref Coordinate cord, Map? map = null)
+    {
+        Console.WriteLine("-------------------------------");
+
+        Console.WriteLine("You enter the Cavern of objects, a maze of rooms filled with dangerous pits in search of the Fountain of Objects.");
+        Console.WriteLine("Light is visible only in the entrance, and no other light is seen anywhere in the caverns.");
+        Console.WriteLine("You must navigate the caverns with your other senses, like hearing and touch.");
+        Console.WriteLine("Find the Fountain of Objects, Activate it, and return to the Entrance.");
+
+        Console.WriteLine("Look out for pits. You will feel a breeze if a pit is in an adjacent room.");
+        Console.WriteLine("If you enter a room with a pit, you will die.");
+
+        Console.WriteLine();
+
+        Console.WriteLine("Available commands:");
+        Console.WriteLine("N - Move North");
+        Console.WriteLine("S - Move South");
+        Console.WriteLine("E - Move East");
+        Console.WriteLine("W - Move West");
+        Console.WriteLine("ENABLE - Enable or disable the fountain if you are in the same room as the fountain.");
+        Console.WriteLine("HELP - Display this help message.");
+    }
+}
 
