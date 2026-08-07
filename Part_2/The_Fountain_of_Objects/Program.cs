@@ -9,6 +9,9 @@ Coordinate playerCoordinate = new Coordinate(0, 0);
 
 IActionCommand start = new HelpCommand(); // Create a new instance of the HelpCommand to display the game instructions
 
+DateTime startDateTime = DateTime.Now;
+DateTime endDateTime = DateTime.Now;
+
 start.Run(ref playerCoordinate);
 
 while (true)
@@ -28,6 +31,7 @@ while (true)
         {
             Console.WriteLine("The fountain of Objects has been reactivated! You escaped with your life!");
             Console.WriteLine("You have won the game!");
+            endDateTime = DateTime.Now;
             break; // Exit the loop and end the game
         }
     }
@@ -50,6 +54,7 @@ while (true)
     else if (mapF.IsPitCoordinate(playerCoordinate)) // Check if the player is at the pit's location
     {
         Console.WriteLine("You fell into a pit and died! Game over.");
+        endDateTime = DateTime.Now;
         break; // Exit the loop and end the game
     }
     else // If the player is in any other room
@@ -77,6 +82,10 @@ while (true)
     movement.Run(ref playerCoordinate, mapF); // Execute the command, passing the player's coordinate and the map
 
 }
+
+TimeSpan time = endDateTime - startDateTime;
+
+Console.WriteLine($"You were in the cave for {time.Minutes} minuets and {time.Seconds} seconds.");
 
 
 // Class representing the map of the game
