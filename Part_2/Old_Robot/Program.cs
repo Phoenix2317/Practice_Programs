@@ -2,11 +2,21 @@
 
 Robot robot = new Robot();
 
-// Read three commands from the console and assign them to the robot's Commands array
-for (int i = 0; i < 3; i++)
+Console.WriteLine("Valid commands: ON, OFF, NORTH, SOUTH, EAST, WEST, STOP");
+Console.WriteLine();
+
+// Read commands from the console and assign them to the robot's Commands array
+while (true)
 {
     string call = Console.ReadLine();
-    robot.Commands[i] = call switch // Use a switch expression to map the input string to the corresponding command object
+    call = call.ToUpper();
+
+    if(call == "STOP")
+    {
+        break;
+    }
+
+    robot.Commands.Add(call switch // Use a switch expression to map the input string to the corresponding command object
     {
         "ON" => new OnCommand(),
         "OFF" => new OffCommand(),
@@ -15,7 +25,8 @@ for (int i = 0; i < 3; i++)
         "EAST" => new EastCommand(),
         "WEST" => new WestCommand(),
         _ => null
-    };
+    });
+    
 }
 robot.Run(); // Execute the commands assigned to the robot and display its state after each command
 
@@ -30,7 +41,7 @@ public class Robot
     public bool IsPowered { get; set; }
 
     // Array to hold the commands for the robot
-    public IRobotCommand?[] Commands { get; } = new IRobotCommand?[3];
+    public List<IRobotCommand?> Commands { get; } = new List<IRobotCommand?>();
 
     // Method to execute the commands in the Commands array
     public void Run()
