@@ -8,9 +8,9 @@ int choice = Convert.ToInt32(Console.ReadLine());
  */
 Sieve sieve = choice switch 
 {
-    1 => new Sieve(isEven),
-    2 => new Sieve(isPositive),
-    3 => new Sieve(isTen)
+    1 => new Sieve(n => n % 2 == 0),
+    2 => new Sieve(n => n > 0),
+    3 => new Sieve(n => n % 10 == 0)
 };
 
 while (true)
@@ -22,19 +22,6 @@ while (true)
     Console.WriteLine($"That number is {badOrGood}");
 
 }
-
-/**
- * Takes a number and compares if it is even or not
- */
-bool isEven(int num) => num % 2 == 0;
-/**
- * Takes a number and compares if it is positive
- */
-bool isPositive(int num) => num > 0;
-/**
- * Takes a number and compares if it can easily divide into ten
- */
-bool isTen(int num) => num % 10 == 0;
 
 /**
  * A class designed to tell if an inputted number is
