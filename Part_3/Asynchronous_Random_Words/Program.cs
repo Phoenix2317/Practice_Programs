@@ -1,15 +1,28 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+while (true)
+{
+    Console.WriteLine("Enter a word to randomly recreate: ");
+    string? word = Console.ReadLine();
+    handleWord(word);
+}
 
-Console.WriteLine("Enter a word to randomly recreate: ");
-string? word = Console.ReadLine();
-DateTime start = DateTime.Now;
-int attempts = await RandomlyRecreateAsynch(word);
+/** <summary>
+ * Handles the process of randomly recreating a word and measuring the time taken.
+ * </summary>
+ * <params name="word">The word to be recreated.</params>
+ * <returns>A task that represents the asynchronous operation.</returns>
+ */
+async Task handleWord(string? word)
+{ 
 
-Console.WriteLine($"It took {attempts} attempts to randomly recreate the word '{word}'");
-TimeSpan elapsed = DateTime.Now - start;
-Console.WriteLine($"Elapsed time: {elapsed.TotalSeconds} seconds");
+    DateTime start = DateTime.Now;
+    int attempts = await RandomlyRecreateAsync(word);
 
+    Console.WriteLine($"It took {attempts} attempts to randomly recreate the word '{word}'");
+    TimeSpan elapsed = DateTime.Now - start;
+    Console.WriteLine($"Elapsed time: {elapsed.TotalSeconds} seconds");
+}
 /** <summary>
  * Randomly recreates the given word by generating random strings of the same length until it matches the original word.
  * </summary>
@@ -50,7 +63,7 @@ int RandomlyRecreate(string? word)
  * <params name="word">The word to be recreated.</params>
  * <returns>A task that represents the asynchronous operation. The task result contains the number of attempts it took to recreate the word.</returns>
  */
-Task<int> RandomlyRecreateAsynch(string? word)
+Task<int> RandomlyRecreateAsync(string? word)
 {
     return Task.Run(() => RandomlyRecreate(word));
 }
