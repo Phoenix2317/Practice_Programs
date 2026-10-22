@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../Colored/Colored.csproj" />
+  <Project Path="Colored_Console.csproj" />
+</Solution>
