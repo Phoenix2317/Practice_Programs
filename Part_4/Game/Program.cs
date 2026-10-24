@@ -2,10 +2,21 @@
 {
     private static void Main(string[] args)
     {
-
+        string? playerName; 
         Game game = new Game();
 
-        game.playerParty.Characters = new CharacterBase[] { new Player("Hero"), new Skeleton() };
+        do
+        {
+            Console.Write("Enter your character's name: ");
+            playerName = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(playerName))
+            {
+                Console.WriteLine("Please enter a valid name.");
+            }
+        } while (string.IsNullOrWhiteSpace(playerName));
+
+
+        game.playerParty.Characters = new CharacterBase[] { new Player(playerName), new Skeleton() };
         game.enemyParty.Characters = new CharacterBase[] { new Skeleton() };
         game.Start();
 
