@@ -16,7 +16,7 @@
         } while (string.IsNullOrWhiteSpace(playerName));
 
 
-        game.playerParty.Characters = new CharacterBase[] { new Player(playerName), new Skeleton() };
+        game.playerParty.Characters = new CharacterBase[] { new Player(playerName)};
         game.enemyParty.Characters = new CharacterBase[] { new Skeleton() };
         game.Start();
 
@@ -45,7 +45,7 @@
                 Console.WriteLine();
             }
 
-            Thread.Sleep(500);
+            
         }
     }
 }
@@ -75,10 +75,55 @@ public class Game
 
 public class Player : CharacterBase
 {
+    string? input = null;
+    int actionNumber = 0;
     public Player(string name)
     {
         this.name = name;
         this.isPlayer = true;
+    }
+
+    public override void Action()
+    {
+        Console.WriteLine($"{name} is deciding what to do...");
+        displayActionMenu();
+        do
+        {
+            input = Console.ReadLine();
+            if (int.TryParse(input, out int actionNumber) && actionNumber >= 1 && actionNumber <= 3)
+            {
+                ActionType selectedAction = (ActionType)(actionNumber - 1);
+
+                if(selectedAction == ActionType.DoNothing)
+                {
+                    Console.WriteLine($"{name} is doing nothing...");
+                }
+                else if (selectedAction == ActionType.Attack)
+                {
+                    Console.WriteLine($"{name} is attacking!");
+                }
+                else if (selectedAction == ActionType.UseItem)
+                {
+                    Console.WriteLine($"{name} is using an item...");
+                }
+
+                
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
+            }
+        } while(!int.TryParse(input, out _) || actionNumber < 1 || actionNumber > 3);
+
+    }
+
+    private void displayActionMenu()
+    {
+        Console.WriteLine("Choose an action:");
+        Console.WriteLine(" 1. Do Nothing");
+        Console.WriteLine(" 2. Attack");
+        Console.WriteLine(" 3. Use Item");
     }
 
 }
@@ -89,6 +134,11 @@ public class Skeleton : CharacterBase
     {
         this.name = "Skeleton";
         this.isPlayer = false;
+    }
+
+    public override void Action()
+    {
+        Console.WriteLine($"{name} is doing nothing...");
     }
 }
 

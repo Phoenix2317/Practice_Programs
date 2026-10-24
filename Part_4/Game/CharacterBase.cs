@@ -6,6 +6,13 @@
 
     public virtual void Action()
     {
-        Console.WriteLine($"{name} is staring...");
+        
+    }
+
+    public enum ActionType
+    {
+        DoNothing,
+        Attack,
+        UseItem
     }
 }
