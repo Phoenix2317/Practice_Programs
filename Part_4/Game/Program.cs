@@ -3,7 +3,7 @@
     private static void Main(string[] args)
     {
         string? playerName; 
-        Game game = new Game();
+        
 
         do
         {
@@ -15,9 +15,8 @@
             }
         } while (string.IsNullOrWhiteSpace(playerName));
 
-
-        game.playerParty.Characters = new CharacterBase[] { new Player(playerName)};
-        game.enemyParty.Characters = new CharacterBase[] { new Skeleton() };
+        Game game = new Game(playerName);
+        
         game.Start();
 
         while(!game.isGameOver)
@@ -26,10 +25,10 @@
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Player's Turn!");
 
-            foreach (var character in game.playerParty.Characters)
+            for(int i = 0; i < game.playerParty.getPartySize(); i++)
             {
-                Console.WriteLine($"{character.name}'s Turn!");
-                character.Action();
+                Console.WriteLine($"{game.playerParty.Characters[i].name}'s Turn!");
+                game.playerParty.Characters[i].Action(game);
                 Console.WriteLine();
             }
 
@@ -38,10 +37,10 @@
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Enemy's Turn!");
             
-            foreach(var character in game.enemyParty.Characters)
+            for(int i = 0; i < game.enemyParty.getPartySize(); i++)
             {
-                Console.WriteLine($"{character.name}'s Turn!");
-                character.Action();
+                Console.WriteLine($"{game.enemyParty.Characters[i].name}'s Turn!");
+                game.enemyParty.Characters[i].Action(game);
                 Console.WriteLine();
             }
 
@@ -53,17 +52,21 @@
 public class Game
 {
 
-    public Party playerParty { get; set; }
-    public Party enemyParty { get; set; }
+    public Party playerParty { get; private set; }
+    public Party enemyParty { get; private set; }
     public bool isGameRunning { get; private set; }
     public bool isGameOver { get; private set; }
+    public int playerPartySize { get; private set; }
+    public int enemyPartySize { get; private set; }
 
-    public Game()
+    public Game(string playerName)
     {
-        playerParty = new Party();
-        enemyParty = new Party();
+        playerParty = new Party(new CharacterBase[] { new Player(playerName) }, true);
+        enemyParty = new Party(new CharacterBase[] { new Skeleton() }, false);
         isGameRunning = false;
         isGameOver = false;
+        playerPartySize = playerParty.getPartySize();
+        enemyPartySize = enemyParty.getPartySize();
     }
 
     public void Start()
@@ -71,8 +74,47 @@ public class Game
         Console.WriteLine("The battle begins!");
         isGameRunning = true;
     }
+
+    public void getParty(Party party)
+    {
+        if(party.Characters == null || party.Characters.Length == 0)
+        {
+            Console.WriteLine("The party has no characters.");
+            return;
+        }
+        else
+        {
+            
+            foreach(var character in party.Characters)
+            {
+                Console.WriteLine($"Character: {character.name}, Is Player: {character.isPlayer}");
+            }
+
+        }
+        
+    }
+
+    public void displayParty(Party party)
+    {
+        if (party.Characters == null || party.Characters.Length == 0)
+        {
+            Console.WriteLine("The party has been defeated.");
+            return;
+        }
+        else
+        {
+            Console.WriteLine($"Party Members ({party.getPartySize()}):");
+            for (int i = 0; i < party.getPartySize(); i++)
+            {
+                Console.WriteLine($" 1. {party.Characters[i].name}");
+            }
+        }
+    }
 }
 
+// <summary>
+// Represents a player character in the game.
+// </summary>
 public class Player : CharacterBase
 {
     string? input = null;
@@ -83,39 +125,61 @@ public class Player : CharacterBase
         this.isPlayer = true;
     }
 
-    public override void Action()
+    // <summary>
+    // Executes the player's action during the game turn.
+    // </summary>
+    // <param name="game">The game instance.</param>
+    public override void Action(Game game)
     {
         Console.WriteLine($"{name} is deciding what to do...");
         displayActionMenu();
-        do
+
+
+        while (true)
         {
             input = Console.ReadLine();
             if (int.TryParse(input, out int actionNumber) && actionNumber >= 1 && actionNumber <= 3)
             {
                 ActionType selectedAction = (ActionType)(actionNumber - 1);
 
-                if(selectedAction == ActionType.DoNothing)
+                if (selectedAction == ActionType.DoNothing)
                 {
                     Console.WriteLine($"{name} is doing nothing...");
                 }
                 else if (selectedAction == ActionType.Attack)
                 {
-                    Console.WriteLine($"{name} is attacking!");
+                    while (true)
+                    {
+                        game.displayParty(game.enemyParty);
+                        Console.Write("Choose a target to attack (enter the number): ");
+                        input = Console.ReadLine();
+
+                        if (int.TryParse(input, out int targetNumber) && targetNumber >= 1 && targetNumber <= game.enemyParty.getPartySize())
+                        {
+                            Console.WriteLine($"{name} is attacking {game.enemyParty.Characters[targetNumber - 1].name}!");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid target selection.");
+                        }
+                    }
                 }
                 else if (selectedAction == ActionType.UseItem)
                 {
                     Console.WriteLine($"{name} is using an item...");
                 }
 
-                
+
                 break;
             }
             else
             {
                 Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
             }
-        } while(!int.TryParse(input, out _) || actionNumber < 1 || actionNumber > 3);
 
+
+        }
     }
 
     private void displayActionMenu()
@@ -128,6 +192,9 @@ public class Player : CharacterBase
 
 }
 
+// <summary>
+// Represents an enemy character in the game.
+// </summary>
 public class Skeleton : CharacterBase
 {
     public Skeleton()
@@ -136,17 +203,47 @@ public class Skeleton : CharacterBase
         this.isPlayer = false;
     }
 
-    public override void Action()
+    public override void Action(Game game)
     {
-        Console.WriteLine($"{name} is doing nothing...");
+        Console.WriteLine($"{name} used Bone Crunch on {game.playerParty.Characters[0].name}!");
     }
 }
+
 
 public class Party
 {
     
-    public CharacterBase[] Characters { get; set; }
-    public bool isPlayerParty { get; set; }
-    public bool isDefeated { get; set; }
+    /**
+     * <summary>
+     * Holds a party of characters.
+     * </summary>
+     * <param name="characters"> Which characters are in the party.</param>
+     * <param name="isPlayerParty"> Is player controlled or is computer controlled (true/false) </param>
+     */
+    public Party(CharacterBase[] characters, bool isPlayerParty)
+    {
+        Characters = characters;
+        this.isPlayerParty = isPlayerParty;
+        isDefeated = false;
+    }
+
+    public CharacterBase[] Characters { get; private set; }
+
+    public bool isPlayerParty { get;}
+    public bool isDefeated { get;}
+
+    public int getPartySize()
+    {
+        if (Characters == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return Characters.Length;
+        }
+    }
+
+
 
 }

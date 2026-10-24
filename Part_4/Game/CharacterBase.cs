@@ -4,7 +4,7 @@
 
     public string name { get; protected set; }
 
-    public virtual void Action()
+    public virtual void Action(Game game)
     {
         
     }
