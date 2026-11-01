@@ -3,8 +3,8 @@
 
     public Party playerParty { get; private set; }
     public Party enemyParty { get; private set; }
-   
 
+    
     public Game(Party playerParty, Party enemyParty)
     {
         this.playerParty = playerParty;
@@ -12,7 +12,7 @@
     }
     
 
-    public void Run()
+    public bool Run()
     {
         Console.WriteLine("The battle begins!");
 
@@ -42,14 +42,14 @@
                         
                         Console.WriteLine();
                         Console.WriteLine("You have been defeated!");
-                        return;
+                        return false;
                     }
                     else if (enemyParty.Characters.Count == 0)
                     {
                         
                         Console.WriteLine();
                         Console.WriteLine("You have won the battle!");
-                        return;
+                        return true;
                     }
 
                 }

@@ -19,6 +19,13 @@ public class BoneCrunch : IAttack
 
 }
 
+public class UnravelingAttack : IAttack
+{
+    private static readonly Random random = new Random();
+    public string name { get; } = "Unraveling Attack";
+    public AttackData Create() => new AttackData(random.Next(3)); // Damage between 0 and 2
+}
+
 public class DoNothingAction : IAction
 {
     public void Run(Game game, CharacterBase actor)

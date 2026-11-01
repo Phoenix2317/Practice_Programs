@@ -36,6 +36,15 @@ public class Skeleton : CharacterBase
     }
 }
 
+public class UncodedOne : CharacterBase
+{
+    public override string Name { get; protected set; } = "The Uncoded One";
+    public override IAttack Basic { get; } = new BoneCrunch();
+    public UncodedOne() : base(15)
+    {
+    }
+}
+
 public class Player : CharacterBase
 {
     public override string Name { get; protected set; }

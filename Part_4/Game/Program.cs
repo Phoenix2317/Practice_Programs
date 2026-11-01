@@ -22,9 +22,45 @@
         Enemyparty.Characters.Add(new Skeleton());
 
         Game game = new Game(Playerparty, Enemyparty);
-        game.Run();
 
-        
+        if(!game.Run())
+        {
+            Console.WriteLine("Game over.");
+        } else
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Another Battle begins!");
+
+            Enemyparty = new Party(new ComputerPlayer());
+            Enemyparty.Characters.Add(new Skeleton());
+            Enemyparty.Characters.Add(new Skeleton());
+
+            game = new Game(Playerparty, Enemyparty);
+
+            if(!game.Run())
+            {
+                Console.WriteLine("Game over.");
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Final Battle begins!");
+                Enemyparty = new Party(new ComputerPlayer());
+                Enemyparty.Characters.Add(new UncodedOne());
+                game = new Game(Playerparty, Enemyparty);
+                if (!game.Run())
+                {
+                    Console.WriteLine("Game over.");
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("Congratulations! You have defeated all enemies!");
+                }
+            }
     }
 }
 
