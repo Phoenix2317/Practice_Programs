@@ -36,6 +36,22 @@
 
                     Console.WriteLine($"{character.Name}'s turn!");
                     party.Player.ChooseAction(this, character).Run(this, character);
+
+                    if(playerParty.Characters.Count == 0)
+                    {
+                        
+                        Console.WriteLine();
+                        Console.WriteLine("You have been defeated!");
+                        return;
+                    }
+                    else if (enemyParty.Characters.Count == 0)
+                    {
+                        
+                        Console.WriteLine();
+                        Console.WriteLine("You have won the battle!");
+                        return;
+                    }
+
                 }
             }
         }

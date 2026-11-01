@@ -53,5 +53,10 @@ public class AttackAction : IAction
 
         Console.WriteLine($"{_attack.name} deals {data.Damage} damage to {_target.Name}!");
         Console.WriteLine($"{_target.Name} has {_target.CurrentHealth} health remaining out of {_target.MaxHealth}.");
+        if(_target.CurrentHealth <= 0)
+        {
+            Console.WriteLine($"{_target.Name} has been defeated!");
+            game.GetPartyFor(_target).Characters.Remove(_target);
+        }
     }
 }
