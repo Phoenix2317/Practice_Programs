@@ -15,18 +15,45 @@
             }
         } while (string.IsNullOrWhiteSpace(playerName));
 
-        Party Playerparty = new Party(new ComputerPlayer());
+        Console.WriteLine("Game mode selection: ");
+        Console.WriteLine("1. Player vs Computer");
+        Console.WriteLine("2. Computer vs Computer");
+        Console.WriteLine("3. Player vs Player");
+        Console.WriteLine("What mode do you want?: ");
+        string choice = Console.ReadLine() ?? "";
+
+        IPlayer player1, player2;
+        
+        if(choice == "1")
+        {
+            player1 = new HumanPlayer();
+            player2 = new ComputerPlayer();
+        }
+        else if (choice == "2")
+        {
+            player1 = new ComputerPlayer();
+            player2 = new ComputerPlayer();
+        }
+        else
+        {
+            player1 = new HumanPlayer();
+            player2 = new HumanPlayer();
+        }
+        
+
+        Party Playerparty = new Party(player1);
         Playerparty.Characters.Add(new Player(playerName));
 
-        Party Enemyparty = new Party(new ComputerPlayer());
+        Party Enemyparty = new Party(player2);
         Enemyparty.Characters.Add(new Skeleton());
 
         Game game = new Game(Playerparty, Enemyparty);
 
-        if(!game.Run())
+        if (!game.Run())
         {
             Console.WriteLine("Game over.");
-        } else
+        }
+        else
         {
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.White;
@@ -38,7 +65,7 @@
 
             game = new Game(Playerparty, Enemyparty);
 
-            if(!game.Run())
+            if (!game.Run())
             {
                 Console.WriteLine("Game over.");
             }
@@ -61,6 +88,7 @@
                     Console.WriteLine("Congratulations! You have defeated all enemies!");
                 }
             }
+        }
     }
 }
 
