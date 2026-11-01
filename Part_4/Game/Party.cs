@@ -1,12 +1,12 @@
-﻿/** <summary>
- * Represents an enemy character in the game.
- * </summary>
- */
+﻿
 
 
 public class Party
 {
-    
+
+    public IPlayer Player { get; }
+    public List<CharacterBase> Characters { get; } = new List<CharacterBase>();
+
     /**
      * <summary>
      * Holds a party of characters.
@@ -14,18 +14,10 @@ public class Party
      * <param name="characters"> Which characters are in the party.</param>
      * <param name="isPlayerParty"> Is player controlled or is computer controlled (true/false) </param>
      */
-    public Party(CharacterBase[] characters, bool isPlayerParty)
+    public Party(IPlayer player)
     {
-        Characters = characters;
-        this.isPlayerParty = isPlayerParty;
-        isDefeated = false;
+       Player = player;
     }
-
-    public CharacterBase[] Characters { get; private set; }
-
-    public bool isPlayerParty { get;}
-    public bool isDefeated { get;}
-
 
     public int getPartySize()
     {
@@ -35,7 +27,7 @@ public class Party
         }
         else
         {
-            return Characters.Length;
+            return Characters.Count;
         }
     }
 
